@@ -1,12 +1,18 @@
 const express = require("express");
 const app = express();
 const http = require("http");
+const path = require('path');
 
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, { cors: { origin: "*" } });
 
-app.use(express.static('public'))
+
+app.use(express.static(path.resolve(__dirname, '../client/dist')));
+
+app.get('*', function(request, response) {
+  response.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
+});
 
 let rooms = {};
 
