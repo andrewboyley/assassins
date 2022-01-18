@@ -1,17 +1,16 @@
 const express = require("express");
 const app = express();
 const http = require("http");
-const path = require('path');
+const path = require("path");
 
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, { cors: { origin: "*" } });
 
+app.use(express.static(path.resolve(__dirname, "../client/dist")));
 
-app.use(express.static(path.resolve(__dirname, '../client/dist')));
-
-app.get('*', function(request, response) {
-  response.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
+app.get("*", function (request, response) {
+  response.sendFile(path.resolve(__dirname, "../client/dist", "index.html"));
 });
 
 let rooms = {};
@@ -60,7 +59,6 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", (reason) => {
     // console.log(`${socket.id} disconnected`);
-
   });
 
   // console.log(`${socket.id} connected`);
@@ -105,20 +103,24 @@ io.on("connection", (socket) => {
   socket.on("join", ({ room, admin, username }, callback) => {
     // const { error, user } = addUser({ id: socket.id, name, room });
 
-    if (socket.rooms.size > 1) {
-      exitRooms(socket);
-    }
-
     if (admin) {
       room = randomCode(4);
       while (rooms[room]) {
         room = randomCode(4);
       }
+
+      if (!rooms[room]) {
+        rooms[room] = [];
+      }
+
       console.log(`Room ${room} created`);
+    } else if (!rooms[room]) {
+      callback(false);
+      return;
     }
 
-    if (!rooms[room]) {
-      rooms[room] = [];
+    if (socket.rooms.size > 1) {
+      exitRooms(socket);
     }
 
     if (rooms[room].length > 0) admin = false;

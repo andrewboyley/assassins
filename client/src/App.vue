@@ -1,5 +1,6 @@
 <template>
   <div id="main">
+    <h1>Assassins!</h1>
     <form id="profile">
       <fieldset>
         <legend>Profile</legend>
@@ -144,7 +145,9 @@ export default {
         "join",
         { room: this.joinRoomCode, admin: false, username: this.username },
         (result) => {
-          // console.log(result);
+          if(!result){
+            alert("Problem joining room");
+          }
         }
       );
     },
