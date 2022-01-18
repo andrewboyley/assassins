@@ -7,6 +7,6 @@
   "license": "MIT",
   "scripts": {
     "start": "node server",
-    "build": "cd client/ && yarn && yarn build"
+    "build": "cd client/ && npm install && npm run build"
   }
 }
