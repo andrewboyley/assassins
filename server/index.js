@@ -92,7 +92,6 @@ io.on("connection", (socket) => {
       // console.log(name1.username + " gets " + name2.username);
 
       io.to(name1.id).emit("target", { username: name2.username });
-      io.to(name2.id).emit("target", { username: name1.username });
     }
   });
 

@@ -24,8 +24,8 @@
     <form id="join">
       <fieldset>
         <legend>Join</legend>
-        <p>Enter room code to join room</p>
-        <input type="text" placeholder="ABCDE" v-model="joinRoomCode" />
+        <p>Enter room code to join</p>
+        <input type="text" placeholder="ABCD" v-model="joinRoomCode" id="roomcode"/>
         <button @click="joinRoom">Join room</button>
       </fieldset>
     </form>
@@ -164,5 +164,11 @@ body {
 
 body {
   position: relative;
+}
+#roomcode{
+  text-transform: uppercase;
+}
+label{
+  margin-right: 1rem;
 }
 </style>
