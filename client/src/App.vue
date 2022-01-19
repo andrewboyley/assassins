@@ -160,7 +160,7 @@ export default {
 
       this.socket.emit(
         "join",
-        { room: this.joinRoomCode, admin: false, username: this.username },
+        { room: this.joinRoomCode.toUpperCase(), admin: false, username: this.username },
         (result) => {
           if (!result) {
             alert("Problem joining room");
