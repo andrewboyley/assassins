@@ -1,7 +1,6 @@
 <template>
   <div id="main">
     <h1>Assassins!</h1>
-    <p>Current global assassins: {{ totalAssassins }}</p>
     <form id="profile">
       <fieldset>
         <legend>Profile</legend>
@@ -71,7 +70,6 @@ export default {
       currentRoom: null,
       username: "",
       isAdmin: false,
-      totalAssassins: 0,
     };
   },
   created() {
@@ -85,9 +83,6 @@ export default {
       this.username = "";
     });
 
-    this.socket.on("numPlayers", (numberOfPlayers) => {
-      this.totalAssassins = numberOfPlayers;
-    });
 
     this.socket.on("target", (user) => {
       // console.log(`My target is ${user.username}`);

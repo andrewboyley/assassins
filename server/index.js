@@ -15,8 +15,6 @@ app.get("*", function (request, response) {
 
 let rooms = {};
 
-let numberOfAssassins = 0;
-
 let exitRooms = function (socket) {
   socket.rooms.forEach((room) => {
     if (!rooms[room]) return;
@@ -55,8 +53,6 @@ let sendRoomInfo = function (room) {
 };
 
 io.on("connection", (socket) => {
-  numberOfAssassins++;
-  io.emit("numPlayers", numberOfAssassins);
 
   socket.on("disconnecting", () => {
     exitRooms(socket);
@@ -64,8 +60,6 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", (reason) => {
     // console.log(`${socket.id} disconnected`);
-    numberOfAssassins--;
-    io.emit("numPlayers", numberOfAssassins);
   });
 
   // console.log(`${socket.id} connected`);
