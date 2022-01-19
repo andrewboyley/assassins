@@ -1,6 +1,7 @@
 <template>
   <div id="main">
     <h1>Assassins!</h1>
+    <p>Current global assassins: {{ totalAssassins }}</p>
     <form id="profile">
       <fieldset>
         <legend>Profile</legend>
@@ -25,7 +26,12 @@
       <fieldset>
         <legend>Join</legend>
         <p>Enter room code to join</p>
-        <input type="text" placeholder="ABCD" v-model="joinRoomCode" id="roomcode"/>
+        <input
+          type="text"
+          placeholder="ABCD"
+          v-model="joinRoomCode"
+          id="roomcode"
+        />
         <button @click="joinRoom">Join room</button>
       </fieldset>
     </form>
@@ -35,10 +41,21 @@
       <h2 v-if="currentRoom?.target">Target: {{ currentRoom?.target }}</h2>
       <button v-if="currentRoomName" @click="leaveRoom">Leave room</button>
       <button v-if="isAdmin" @click="beginAssign">Assign targets</button>
-      <p v-for="member in roomMembers" :key="member.id">
-        {{ member.username }} <span v-if="member.admin">~~Admin~~</span>
+      <p class="subtle" v-if="!isAdmin && currentRoomName">
+        *Ask your admin to start the game by clicking the 'Assign targets'
+        button
       </p>
+      <fieldset class="members-field" v-if="currentRoomName">
+        <legend>Members</legend>
+        <p v-for="member in roomMembers" :key="member.id">
+          {{ member.username }} <span v-if="member.admin">~~Admin~~</span>
+        </p>
+      </fieldset>
     </div>
+    <footer>
+      Made with &#10084;&#65039; by Andrew Boyley, please don't assassinate me
+      &copy; {{ new Date().getFullYear() }}
+    </footer>
   </div>
 </template>
 
@@ -54,6 +71,7 @@ export default {
       currentRoom: null,
       username: "",
       isAdmin: false,
+      totalAssassins: 0,
     };
   },
   created() {
@@ -65,6 +83,10 @@ export default {
 
     this.socket.on("connect", () => {
       this.username = "";
+    });
+
+    this.socket.on("numPlayers", (numberOfPlayers) => {
+      this.totalAssassins = numberOfPlayers;
     });
 
     this.socket.on("target", (user) => {
@@ -145,7 +167,7 @@ export default {
         "join",
         { room: this.joinRoomCode, admin: false, username: this.username },
         (result) => {
-          if(!result){
+          if (!result) {
             alert("Problem joining room");
           }
         }
@@ -162,13 +184,28 @@ body {
   overflow-x: hidden;
 }
 
-body {
-  position: relative;
-}
-#roomcode{
+#roomcode {
   text-transform: uppercase;
 }
-label{
+
+.members-field{
+  margin: 1rem auto;
+}
+
+label {
   margin-right: 1rem;
+}
+
+.subtle {
+  font-size: 0.75rem;
+}
+
+form {
+  margin: 1rem auto;
+}
+
+footer {
+  margin: 2rem 0;
+  font-size: 0.75rem;
 }
 </style>
